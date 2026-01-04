@@ -24,6 +24,7 @@ DATASETS = {
         },
         "name": "Corn Production",
         "desc": "Corn production by state",
+        "year_ranges": [(1990, 2025)],
     },
     "soybeans_production": {
         "params": {
@@ -33,6 +34,7 @@ DATASETS = {
         },
         "name": "Soybeans Production",
         "desc": "Soybean production by state",
+        "year_ranges": [(1990, 2025)],
     },
     "wheat_production": {
         "params": {
@@ -42,6 +44,7 @@ DATASETS = {
         },
         "name": "Wheat Production",
         "desc": "Wheat production by state",
+        "year_ranges": [(1990, 2025)],
     },
     "cattle_inventory": {
         "params": {
@@ -51,6 +54,11 @@ DATASETS = {
         },
         "name": "Cattle Inventory",
         "desc": "Cattle inventory by state",
+        # Split into 5-year chunks to stay under 50k limit (~400k total records)
+        "year_ranges": [
+            (1990, 1994), (1995, 1999), (2000, 2004), (2005, 2009),
+            (2010, 2014), (2015, 2019), (2020, 2025),
+        ],
     },
     "hogs_inventory": {
         "params": {
@@ -60,6 +68,11 @@ DATASETS = {
         },
         "name": "Hogs Inventory",
         "desc": "Hog inventory by state",
+        # Split into 5-year chunks to stay under 50k limit (~167k total records)
+        "year_ranges": [
+            (1990, 1994), (1995, 1999), (2000, 2004), (2005, 2009),
+            (2010, 2014), (2015, 2019), (2020, 2025),
+        ],
     },
     "milk_production": {
         "params": {
@@ -69,6 +82,7 @@ DATASETS = {
         },
         "name": "Milk Production",
         "desc": "Milk production by state",
+        "year_ranges": [(1990, 2025)],
     },
     "cotton_production": {
         "params": {
@@ -78,6 +92,7 @@ DATASETS = {
         },
         "name": "Cotton Production",
         "desc": "Cotton production by state",
+        "year_ranges": [(1990, 2025)],
     },
     "rice_production": {
         "params": {
@@ -87,13 +102,9 @@ DATASETS = {
         },
         "name": "Rice Production",
         "desc": "Rice production by state",
+        "year_ranges": [(1990, 2025)],
     },
 }
-
-# Fetch all years at once for national/state data (should be under 50k)
-YEAR_RANGES = [
-    (1990, 2025),
-]
 
 
 def fetch_data(params: dict, year_start: int, year_end: int) -> list:
@@ -113,6 +124,9 @@ def fetch_data(params: dict, year_start: int, year_end: int) -> list:
     response = get(url, timeout=300)
     result = response.json()
 
+    if "error" in result:
+        raise RuntimeError(f"NASS API error: {result['error']}")
+
     if "data" not in result:
         return []
 
@@ -129,7 +143,7 @@ def run():
     # Create list of all dataset+year_range combinations
     all_jobs = []
     for dataset_key, dataset_info in DATASETS.items():
-        for year_start, year_end in YEAR_RANGES:
+        for year_start, year_end in dataset_info["year_ranges"]:
             job_key = f"{dataset_key}_{year_start}_{year_end}"
             if job_key not in completed:
                 all_jobs.append((dataset_key, dataset_info, year_start, year_end, job_key))
