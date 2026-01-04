@@ -92,7 +92,7 @@ DATASETS = {
 
 # Fetch all years at once for national/state data (should be under 50k)
 YEAR_RANGES = [
-    (1990, 2024),
+    (1990, 2025),
 ]
 
 
