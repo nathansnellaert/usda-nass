@@ -371,7 +371,7 @@ DATASETS = {
         },
         "name": "Cattle Inventory",
         "desc": "Cattle inventory by state (survey totals)",
-        "year_ranges": [(1950, 2025)],
+        "year_ranges": [(1950, 1979), (1980, 1999), (2000, 2025)],
     },
     # === LIVESTOCK - HOGS ===
     "hogs_inventory": {
@@ -384,7 +384,7 @@ DATASETS = {
         },
         "name": "Hogs Inventory",
         "desc": "Hog inventory by state (survey totals)",
-        "year_ranges": [(1950, 2025)],
+        "year_ranges": [(1950, 1979), (1980, 1999), (2000, 2025)],
     },
     # === LIVESTOCK - CHICKENS ===
     "chickens_inventory": {

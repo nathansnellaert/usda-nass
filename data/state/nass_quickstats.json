@@ -1,16 +1,41 @@
 {
   "completed": [
-    "cattle_inventory_1990_2025",
+    "corn_production_1950_1979",
+    "soybeans_production_1950_2025",
+    "rice_yield_1950_2025",
+    "barley_yield_1950_2025",
     "milk_production_1990_2025",
-    "hogs_inventory_1990_2025",
-    "corn_production_1990_2025",
-    "wheat_production_1990_2025",
     "rice_production_1990_2025",
+    "cattle_inventory_1990_2025",
+    "corn_production_2006_2025",
+    "wheat_area_harvested_1950_2025",
+    "hay_production_1950_2025",
+    "wheat_production_1950_2025",
+    "corn_yield_1950_2025",
+    "oats_yield_1950_2025",
+    "corn_yield_1990_2025",
+    "cotton_production_1950_2025",
+    "soybeans_yield_1950_2025",
     "soybeans_production_1990_2025",
-    "cotton_production_1990_2025"
+    "wheat_production_1990_2025",
+    "wheat_yield_1950_2025",
+    "barley_production_1950_2025",
+    "sorghum_production_1950_2025",
+    "corn_area_harvested_1950_2025",
+    "oats_production_1950_2025",
+    "corn_production_1990_2025",
+    "corn_production_1980_2005",
+    "corn_yield_1950_1989",
+    "rice_production_1950_2025",
+    "soybeans_area_harvested_1950_2025",
+    "hogs_inventory_1990_2025",
+    "sorghum_yield_1950_2025",
+    "corn_production_1950_2025",
+    "cotton_production_1990_2025",
+    "cotton_yield_1950_2025"
   ],
   "_metadata": {
-    "updated_at": "2026-01-04T09:01:29.879056",
+    "updated_at": "2026-01-04T20:32:49.423072",
     "run_id": "local-run"
   }
 }
