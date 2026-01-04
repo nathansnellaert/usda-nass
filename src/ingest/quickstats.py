@@ -2,58 +2,97 @@
 
 API Docs: https://quickstats.nass.usda.gov/api
 Requires API key (NASS_API_KEY environment variable).
-Max 50,000 records per request - must filter by year or other params.
+Max 50,000 records per request - must filter by commodity/year.
 """
 
 import os
 import time
+from urllib.parse import quote
 from subsets_utils import get, save_raw_json, load_state, save_state
 
 API_KEY = os.environ["NASS_API_KEY"]
 BASE_URL = "https://quickstats.nass.usda.gov/api"
 
-# Key commodity groups to fetch with their parameters
-# We fetch by sector and source to stay under 50k limit
+# Focus on key commodities with national-level production data
+# Each query is scoped to stay under 50k limit
 DATASETS = {
-    "crops_survey": {
-        "params": {"sector_desc": "CROPS", "source_desc": "SURVEY"},
-        "name": "Crops Survey Data",
-        "desc": "Crop production, yields, planted/harvested acres from surveys",
+    "corn_production": {
+        "params": {
+            "commodity_desc": "CORN",
+            "statisticcat_desc": "PRODUCTION",
+            "agg_level_desc": "STATE",
+        },
+        "name": "Corn Production",
+        "desc": "Corn production by state",
     },
-    "crops_census": {
-        "params": {"sector_desc": "CROPS", "source_desc": "CENSUS"},
-        "name": "Crops Census Data",
-        "desc": "Crop data from Census of Agriculture",
+    "soybeans_production": {
+        "params": {
+            "commodity_desc": "SOYBEANS",
+            "statisticcat_desc": "PRODUCTION",
+            "agg_level_desc": "STATE",
+        },
+        "name": "Soybeans Production",
+        "desc": "Soybean production by state",
     },
-    "animals_survey": {
-        "params": {"sector_desc": "ANIMALS & PRODUCTS", "source_desc": "SURVEY"},
-        "name": "Animals & Products Survey Data",
-        "desc": "Livestock counts, milk production, eggs from surveys",
+    "wheat_production": {
+        "params": {
+            "commodity_desc": "WHEAT",
+            "statisticcat_desc": "PRODUCTION",
+            "agg_level_desc": "STATE",
+        },
+        "name": "Wheat Production",
+        "desc": "Wheat production by state",
     },
-    "animals_census": {
-        "params": {"sector_desc": "ANIMALS & PRODUCTS", "source_desc": "CENSUS"},
-        "name": "Animals & Products Census Data",
-        "desc": "Livestock data from Census of Agriculture",
+    "cattle_inventory": {
+        "params": {
+            "commodity_desc": "CATTLE",
+            "statisticcat_desc": "INVENTORY",
+            "agg_level_desc": "STATE",
+        },
+        "name": "Cattle Inventory",
+        "desc": "Cattle inventory by state",
     },
-    "economics": {
-        "params": {"sector_desc": "ECONOMICS"},
-        "name": "Agricultural Economics",
-        "desc": "Farm income, expenses, land values",
+    "hogs_inventory": {
+        "params": {
+            "commodity_desc": "HOGS",
+            "statisticcat_desc": "INVENTORY",
+            "agg_level_desc": "STATE",
+        },
+        "name": "Hogs Inventory",
+        "desc": "Hog inventory by state",
     },
-    "environmental": {
-        "params": {"sector_desc": "ENVIRONMENTAL"},
-        "name": "Environmental Data",
-        "desc": "Fertilizer use, irrigation, conservation practices",
+    "milk_production": {
+        "params": {
+            "commodity_desc": "MILK",
+            "statisticcat_desc": "PRODUCTION",
+            "agg_level_desc": "STATE",
+        },
+        "name": "Milk Production",
+        "desc": "Milk production by state",
+    },
+    "cotton_production": {
+        "params": {
+            "commodity_desc": "COTTON",
+            "statisticcat_desc": "PRODUCTION",
+            "agg_level_desc": "STATE",
+        },
+        "name": "Cotton Production",
+        "desc": "Cotton production by state",
+    },
+    "rice_production": {
+        "params": {
+            "commodity_desc": "RICE",
+            "statisticcat_desc": "PRODUCTION",
+            "agg_level_desc": "STATE",
+        },
+        "name": "Rice Production",
+        "desc": "Rice production by state",
     },
 }
 
-# Years to fetch - split into chunks to stay under 50k limit
+# Fetch all years at once for national/state data (should be under 50k)
 YEAR_RANGES = [
-    (2020, 2024),
-    (2015, 2019),
-    (2010, 2014),
-    (2005, 2009),
-    (2000, 2004),
+    (1990, 2024),
 ]
 
 
@@ -67,7 +106,8 @@ def fetch_data(params: dict, year_start: int, year_end: int) -> list:
         **params,
     }
 
-    query_string = "&".join(f"{k}={v}" for k, v in query_params.items())
+    # Properly URL-encode parameters
+    query_string = "&".join(f"{k}={quote(str(v))}" for k, v in query_params.items())
     url = f"{BASE_URL}/api_GET/?{query_string}"
 
     response = get(url, timeout=300)

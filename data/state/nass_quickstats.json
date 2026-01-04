@@ -1,0 +1,16 @@
+{
+  "completed": [
+    "rice_production_1990_2024",
+    "milk_production_1990_2024",
+    "soybeans_production_1990_2024",
+    "hogs_inventory_1990_2024",
+    "cotton_production_1990_2024",
+    "cattle_inventory_1990_2024",
+    "corn_production_1990_2024",
+    "wheat_production_1990_2024"
+  ],
+  "_metadata": {
+    "updated_at": "2026-01-03T23:08:31.329369",
+    "run_id": "test-run"
+  }
+}
