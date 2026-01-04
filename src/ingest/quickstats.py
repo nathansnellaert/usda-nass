@@ -51,28 +51,24 @@ DATASETS = {
             "commodity_desc": "CATTLE",
             "statisticcat_desc": "INVENTORY",
             "agg_level_desc": "STATE",
+            "source_desc": "SURVEY",
+            "domain_desc": "TOTAL",
         },
         "name": "Cattle Inventory",
-        "desc": "Cattle inventory by state",
-        # Split into 5-year chunks to stay under 50k limit (~400k total records)
-        "year_ranges": [
-            (1990, 1994), (1995, 1999), (2000, 2004), (2005, 2009),
-            (2010, 2014), (2015, 2019), (2020, 2025),
-        ],
+        "desc": "Cattle inventory by state (survey totals)",
+        "year_ranges": [(1990, 2025)],
     },
     "hogs_inventory": {
         "params": {
             "commodity_desc": "HOGS",
             "statisticcat_desc": "INVENTORY",
             "agg_level_desc": "STATE",
+            "source_desc": "SURVEY",
+            "domain_desc": "TOTAL",
         },
         "name": "Hogs Inventory",
-        "desc": "Hog inventory by state",
-        # Split into 5-year chunks to stay under 50k limit (~167k total records)
-        "year_ranges": [
-            (1990, 1994), (1995, 1999), (2000, 2004), (2005, 2009),
-            (2010, 2014), (2015, 2019), (2020, 2025),
-        ],
+        "desc": "Hog inventory by state (survey totals)",
+        "year_ranges": [(1990, 2025)],
     },
     "milk_production": {
         "params": {
