@@ -428,15 +428,17 @@ DATASETS = {
         "year_ranges": [(1950, 2025)],
     },
     # === DAIRY - MILK ===
+    # Milk has many class breakdowns (dry, skim, condensed, etc.) - filter to "ALL CLASSES"
     "milk_production": {
         "params": {
             "commodity_desc": "MILK",
             "statisticcat_desc": "PRODUCTION",
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
+            "class_desc": "ALL CLASSES",
         },
         "name": "Milk Production",
-        "desc": "Milk production by state (totals)",
+        "desc": "Milk production by state (all classes)",
         "year_ranges": [(1950, 2025)],
     },
     # === EGGS ===
