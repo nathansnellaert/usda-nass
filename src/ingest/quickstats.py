@@ -361,6 +361,7 @@ DATASETS = {
         "year_ranges": [(1950, 2025)],
     },
     # === LIVESTOCK - CATTLE ===
+    # Note: Cattle data is very dense with many breakdowns - split into 10-year chunks
     "cattle_inventory": {
         "params": {
             "commodity_desc": "CATTLE",
@@ -371,7 +372,10 @@ DATASETS = {
         },
         "name": "Cattle Inventory",
         "desc": "Cattle inventory by state (survey totals)",
-        "year_ranges": [(1950, 1979), (1980, 1999), (2000, 2025)],
+        "year_ranges": [
+            (1950, 1959), (1960, 1969), (1970, 1979), (1980, 1989),
+            (1990, 1999), (2000, 2009), (2010, 2025)
+        ],
     },
     # === LIVESTOCK - HOGS ===
     "hogs_inventory": {
@@ -384,7 +388,10 @@ DATASETS = {
         },
         "name": "Hogs Inventory",
         "desc": "Hog inventory by state (survey totals)",
-        "year_ranges": [(1950, 1979), (1980, 1999), (2000, 2025)],
+        "year_ranges": [
+            (1950, 1959), (1960, 1969), (1970, 1979), (1980, 1989),
+            (1990, 1999), (2000, 2009), (2010, 2025)
+        ],
     },
     # === LIVESTOCK - CHICKENS ===
     "chickens_inventory": {
