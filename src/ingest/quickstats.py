@@ -377,6 +377,7 @@ DATASETS = {
         "year_ranges": [(1950, 2025)],
     },
     # === LIVESTOCK - HOGS ===
+    # Hogs also has many class breakdowns - filter to "ALL CLASSES" for totals
     "hogs_inventory": {
         "params": {
             "commodity_desc": "HOGS",
@@ -384,10 +385,11 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "source_desc": "SURVEY",
             "domain_desc": "TOTAL",
+            "class_desc": "ALL CLASSES",
         },
         "name": "Hogs Inventory",
-        "desc": "Hog inventory by state (survey totals)",
-        "year_ranges": [(1950, 1979), (1980, 2025)],
+        "desc": "Hog inventory by state (all classes)",
+        "year_ranges": [(1950, 2025)],
     },
     # === LIVESTOCK - CHICKENS ===
     "chickens_inventory": {
