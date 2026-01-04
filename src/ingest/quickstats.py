@@ -428,7 +428,7 @@ DATASETS = {
         "year_ranges": [(1950, 2025)],
     },
     # === DAIRY - MILK ===
-    # Milk data is very dense due to monthly production. Split into 20-year chunks.
+    # Milk data includes monthly data - filter to annual only to stay under 50k limit
     "milk_production": {
         "params": {
             "commodity_desc": "MILK",
@@ -436,10 +436,11 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
             "class_desc": "ALL CLASSES",
+            "freq_desc": "ANNUAL",
         },
         "name": "Milk Production",
-        "desc": "Milk production by state (all classes)",
-        "year_ranges": [(1950, 1969), (1970, 1989), (1990, 2009), (2010, 2025)],
+        "desc": "Milk production by state (annual, all classes)",
+        "year_ranges": [(1950, 2025)],
     },
     # === EGGS ===
     "eggs_production": {
