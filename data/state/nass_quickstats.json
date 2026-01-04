@@ -1,24 +1,7 @@
 {
-  "completed": [
-    "corn_production_1990_2025",
-    "cattle_inventory_1990_2024",
-    "hogs_inventory_1990_2025",
-    "hogs_inventory_1990_2024",
-    "rice_production_1990_2025",
-    "soybeans_production_1990_2025",
-    "corn_production_1990_2024",
-    "soybeans_production_1990_2024",
-    "cotton_production_1990_2024",
-    "wheat_production_1990_2025",
-    "rice_production_1990_2024",
-    "cattle_inventory_1990_2025",
-    "wheat_production_1990_2024",
-    "milk_production_1990_2025",
-    "milk_production_1990_2024",
-    "cotton_production_1990_2025"
-  ],
+  "completed": [],
   "_metadata": {
-    "updated_at": "2026-01-04T08:54:29.616508",
-    "run_id": "local-run"
+    "updated_at": "2026-01-04T10:00:00.000000",
+    "run_id": "reset-for-expanded-coverage"
   }
 }
