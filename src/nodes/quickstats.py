@@ -1,22 +1,32 @@
-"""USDA NASS QuickStats - download agricultural statistics.
+"""USDA NASS QuickStats - US agricultural statistics by state.
 
 Source: https://quickstats.nass.usda.gov/api
-Requires NASS__get_api_key() environment variable.
+Covers major crops (corn, soybeans, wheat, rice), livestock (cattle, hogs,
+chickens), and dairy/eggs at the US state level, 1950-2025.
 """
 import os
 import time
+
+import pyarrow as pa
 from urllib.parse import quote
-from subsets_utils import get, save_raw_json, load_state, save_state
+from subsets_utils import (
+    get, save_raw_json, load_raw_json, load_state, save_state,
+    merge, publish, data_hash,
+)
 
 BASE_URL = "https://quickstats.nass.usda.gov/api"
+LICENSE = "Public domain (US Government work)"
 
+COLUMN_DESCRIPTIONS = {
+    "year": "Survey year",
+    "state": "US state name",
+    "state_code": "Two-letter state abbreviation",
+    "value": "Reported numeric value (null if withheld or suppressed by USDA)",
+    "unit": "Unit of measurement",
+    "reference_period": "Time period of observation",
+}
 
-def _get_api_key():
-    return os.environ["NASS__get_api_key()"]
-
-# Comprehensive agricultural datasets
 DATASETS = {
-    # === CORN ===
     "corn_production": {
         "params": {
             "commodity_desc": "CORN",
@@ -24,8 +34,8 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Corn Production",
-        "desc": "Corn production by state (totals)",
+        "title": "USDA NASS: Corn Production by State",
+        "description": "Annual corn production by US state from USDA National Agricultural Statistics Service surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "corn_yield": {
@@ -35,8 +45,8 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Corn Yield",
-        "desc": "Corn yield by state (totals)",
+        "title": "USDA NASS: Corn Yield by State",
+        "description": "Annual corn yield per acre by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "corn_area_harvested": {
@@ -46,11 +56,10 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Corn Area Harvested",
-        "desc": "Corn area harvested by state (totals)",
+        "title": "USDA NASS: Corn Area Harvested by State",
+        "description": "Annual corn area harvested by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
-    # === SOYBEANS ===
     "soybeans_production": {
         "params": {
             "commodity_desc": "SOYBEANS",
@@ -58,8 +67,8 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Soybeans Production",
-        "desc": "Soybean production by state (totals)",
+        "title": "USDA NASS: Soybean Production by State",
+        "description": "Annual soybean production by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "soybeans_yield": {
@@ -69,8 +78,8 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Soybeans Yield",
-        "desc": "Soybean yield by state (totals)",
+        "title": "USDA NASS: Soybean Yield by State",
+        "description": "Annual soybean yield per acre by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "soybeans_area_harvested": {
@@ -80,11 +89,10 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Soybeans Area Harvested",
-        "desc": "Soybean area harvested by state (totals)",
+        "title": "USDA NASS: Soybean Area Harvested by State",
+        "description": "Annual soybean area harvested by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
-    # === WHEAT ===
     "wheat_production": {
         "params": {
             "commodity_desc": "WHEAT",
@@ -92,8 +100,8 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Wheat Production",
-        "desc": "Wheat production by state (totals)",
+        "title": "USDA NASS: Wheat Production by State",
+        "description": "Annual wheat production by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "wheat_yield": {
@@ -103,8 +111,8 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Wheat Yield",
-        "desc": "Wheat yield by state (totals)",
+        "title": "USDA NASS: Wheat Yield by State",
+        "description": "Annual wheat yield per acre by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "wheat_area_harvested": {
@@ -114,11 +122,10 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Wheat Area Harvested",
-        "desc": "Wheat area harvested by state (totals)",
+        "title": "USDA NASS: Wheat Area Harvested by State",
+        "description": "Annual wheat area harvested by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
-    # === RICE ===
     "rice_production": {
         "params": {
             "commodity_desc": "RICE",
@@ -126,8 +133,8 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Rice Production",
-        "desc": "Rice production by state (totals)",
+        "title": "USDA NASS: Rice Production by State",
+        "description": "Annual rice production by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "rice_yield": {
@@ -137,11 +144,10 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Rice Yield",
-        "desc": "Rice yield by state (totals)",
+        "title": "USDA NASS: Rice Yield by State",
+        "description": "Annual rice yield per acre by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
-    # === LIVESTOCK ===
     "cattle_inventory": {
         "params": {
             "commodity_desc": "CATTLE",
@@ -151,8 +157,8 @@ DATASETS = {
             "domain_desc": "TOTAL",
             "class_desc": "INCL CALVES",
         },
-        "name": "Cattle Inventory",
-        "desc": "Cattle inventory by state (all cattle including calves)",
+        "title": "USDA NASS: Cattle Inventory by State",
+        "description": "Annual cattle inventory (including calves) by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "hogs_inventory": {
@@ -164,8 +170,8 @@ DATASETS = {
             "domain_desc": "TOTAL",
             "class_desc": "ALL CLASSES",
         },
-        "name": "Hogs Inventory",
-        "desc": "Hog inventory by state (all classes)",
+        "title": "USDA NASS: Hog Inventory by State",
+        "description": "Annual hog inventory by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "chickens_inventory": {
@@ -175,11 +181,10 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Chickens Inventory",
-        "desc": "Chickens inventory by state (totals)",
+        "title": "USDA NASS: Chicken Inventory by State",
+        "description": "Annual chicken inventory by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
-    # === DAIRY ===
     "milk_production": {
         "params": {
             "commodity_desc": "MILK",
@@ -189,8 +194,8 @@ DATASETS = {
             "class_desc": "ALL CLASSES",
             "freq_desc": "ANNUAL",
         },
-        "name": "Milk Production",
-        "desc": "Milk production by state (annual, all classes)",
+        "title": "USDA NASS: Milk Production by State",
+        "description": "Annual milk production by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
     "eggs_production": {
@@ -200,91 +205,132 @@ DATASETS = {
             "agg_level_desc": "STATE",
             "domain_desc": "TOTAL",
         },
-        "name": "Eggs Production",
-        "desc": "Eggs production by state (totals)",
+        "title": "USDA NASS: Egg Production by State",
+        "description": "Annual egg production by US state from USDA NASS surveys.",
         "year_ranges": [(1950, 2025)],
     },
 }
 
 
-def fetch_data(params: dict, year_start: int, year_end: int) -> list:
-    """Fetch data for a year range with given parameters."""
+def _api_key():
+    return os.environ["NASS_API_KEY"]
+
+
+def _fetch(params, year_start, year_end):
     query_params = {
-        "key": _get_api_key(),
+        "key": _api_key(),
         "format": "JSON",
         "year__GE": str(year_start),
         "year__LE": str(year_end),
         **params,
     }
-
     query_string = "&".join(f"{k}={quote(str(v))}" for k, v in query_params.items())
     url = f"{BASE_URL}/api_GET/?{query_string}"
-
     response = get(url, timeout=300)
     result = response.json()
-
     if "error" in result:
         raise RuntimeError(f"NASS API error: {result['error']}")
-
-    if "data" not in result:
-        return []
-
-    return result["data"]
+    return result.get("data", [])
 
 
-def run():
-    """Fetch all NASS QuickStats datasets."""
+def _raw_id(key, ys, ye):
+    return f"nass_{key}_{ys}_{ye}"
+
+
+def _parse_value(raw):
+    if not raw or not isinstance(raw, str):
+        return None
+    v = raw.strip()
+    if not v or v.startswith("("):
+        return None
+    try:
+        return float(v.replace(",", ""))
+    except ValueError:
+        return None
+
+
+def download():
     print("Fetching USDA NASS QuickStats data...")
-
     state = load_state("nass_quickstats")
     completed = set(state.get("completed", []))
 
-    all_jobs = []
-    for dataset_key, dataset_info in DATASETS.items():
-        for year_start, year_end in dataset_info["year_ranges"]:
-            job_key = f"{dataset_key}_{year_start}_{year_end}"
+    jobs = []
+    for key, info in DATASETS.items():
+        for ys, ye in info["year_ranges"]:
+            job_key = f"{key}_{ys}_{ye}"
             if job_key not in completed:
-                all_jobs.append((dataset_key, dataset_info, year_start, year_end, job_key))
+                jobs.append((key, info, ys, ye, job_key))
 
-    if not all_jobs:
+    if not jobs:
         print("  All datasets up to date")
         return
 
-    print(f"  Jobs to fetch: {len(all_jobs)}")
-
-    for i, (dataset_key, dataset_info, year_start, year_end, job_key) in enumerate(all_jobs, 1):
-        print(f"  [{i}/{len(all_jobs)}] Fetching {dataset_info['name']} ({year_start}-{year_end})...")
-
-        data = fetch_data(dataset_info["params"], year_start, year_end)
-
-        if data:
-            save_raw_json(
-                {
-                    "key": dataset_key,
-                    "name": dataset_info["name"],
-                    "description": dataset_info["desc"],
-                    "year_start": year_start,
-                    "year_end": year_end,
-                    "data": data,
-                },
-                f"nass_{dataset_key}_{year_start}_{year_end}",
-                compress=True,
-            )
-            print(f"    Saved {len(data):,} records")
-        else:
-            print(f"    No data available")
+    print(f"  {len(jobs)} datasets to fetch")
+    for i, (key, info, ys, ye, job_key) in enumerate(jobs, 1):
+        print(f"  [{i}/{len(jobs)}] {info['title']} ({ys}-{ye})...")
+        data = _fetch(info["params"], ys, ye)
+        save_raw_json(data, _raw_id(key, ys, ye), compress=True)
+        print(f"    {len(data):,} records")
 
         completed.add(job_key)
         save_state("nass_quickstats", {"completed": list(completed)})
         time.sleep(1)
 
-    print(f"  Ingested {len(all_jobs)} dataset chunks")
+
+def transform():
+    print("Transforming USDA NASS datasets...")
+
+    for key, info in DATASETS.items():
+        dataset_id = f"nass_{key}"
+
+        records = []
+        for ys, ye in info["year_ranges"]:
+            raw = load_raw_json(_raw_id(key, ys, ye))
+            if isinstance(raw, list):
+                records.extend(raw)
+            elif isinstance(raw, dict) and "data" in raw:
+                records.extend(raw["data"])
+
+        if not records:
+            print(f"  Skipping {dataset_id} - no data")
+            continue
+
+        rows = []
+        for r in records:
+            rows.append({
+                "year": int(r["year"]),
+                "state": r["state_name"],
+                "state_code": r["state_alpha"],
+                "value": _parse_value(r.get("Value", "")),
+                "unit": r["unit_desc"],
+                "reference_period": r["reference_period_desc"],
+            })
+
+        table = pa.Table.from_pylist(rows)
+
+        h = data_hash(table)
+        prev = load_state(dataset_id)
+        if prev.get("hash") == h:
+            print(f"  Skipping {dataset_id} - unchanged")
+            continue
+
+        merge(table, dataset_id, key=["year", "state", "reference_period"])
+        publish(dataset_id, {
+            "id": dataset_id,
+            "title": info["title"],
+            "description": info["description"],
+            "license": LICENSE,
+            "column_descriptions": COLUMN_DESCRIPTIONS,
+        })
+        save_state(dataset_id, {"hash": h})
+        print(f"  Published {dataset_id}: {len(table):,} rows")
 
 
 NODES = {
-    run: [],
+    download: [],
+    transform: [download],
 }
 
-
 if __name__ == "__main__":
-    run()
+    download()
+    transform()
