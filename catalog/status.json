@@ -1,0 +1,530 @@
+{
+  "_meta": {
+    "catalog_source": "https://quickstats.nass.usda.gov/api",
+    "last_synced": "2026-04-25T19:48:55.697806+00:00"
+  },
+  "datasets": {
+    "peanuts": {
+      "title": "Peanuts — Acreage, Production, Yield, Price",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=PEANUTS",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly during growing season",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US peanut statistics: planted/harvested acreage, production (lbs), yield and farm-gate prices. Concentrated in Georgia, Alabama, Florida, Texas and the Carolinas."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "S",
+        "expected_demand": 52,
+        "use_cases": "Track US peanut supply and farm-gate prices for commodity analysts and food manufacturers. Useful for peanut butter cost modeling and trade flow analysis."
+      }
+    },
+    "rice": {
+      "title": "Rice — Acreage, Production, Yield, Price (by class)",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=RICE",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly during growing season",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US rice statistics by class (Long Grain, Medium Grain, Short Grain): acreage, production (cwt), yield and prices. Concentrated in Arkansas, California, Louisiana, Mississippi, Missouri and Texas."
+      },
+      "status": "active",
+      "reason": null,
+      "node": "src/nodes/quickstats.py",
+      "curation": {
+        "expected_size": null,
+        "expected_demand": 65,
+        "use_cases": "Monitor US rice supply by class for food industry sourcing and price benchmarking. Supports agricultural commodity research and trade policy analysis."
+      }
+    },
+    "poultry_eggs": {
+      "title": "Poultry & Eggs — Layers, Broilers, Turkeys, Egg Production",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=CHICKENS&commodity_desc=TURKEYS&commodity_desc=EGGS",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly (Chickens & Eggs, Turkey Hatchery); annual summaries",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US poultry statistics: layer flock size, eggs per layer, table-egg and hatching-egg production; broiler chicks placed and produced; turkey poults hatched and turkey production; farm-gate prices for eggs, broilers and turkeys."
+      },
+      "status": "active",
+      "reason": null,
+      "node": "src/nodes/quickstats.py",
+      "curation": {
+        "expected_size": null,
+        "expected_demand": 82,
+        "use_cases": "Track US egg and poultry supply cycles for food cost analysis, particularly relevant during avian influenza outbreaks. Supports protein market research and retail price forecasting."
+      }
+    },
+    "wheat": {
+      "title": "Wheat — Acreage, Production, Yield, Price, Stocks (by class)",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=WHEAT",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly (Crop Production); quarterly (Stocks)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US wheat statistics broken out by class (Hard Red Winter, Hard Red Spring, Soft Red Winter, White, Durum): acreage, production, yield, prices and ending stocks. Series back to 1866 for headline production."
+      },
+      "status": "active",
+      "reason": null,
+      "node": "src/nodes/quickstats.py",
+      "curation": {
+        "expected_size": null,
+        "expected_demand": 91,
+        "use_cases": "Benchmark US wheat supply fundamentals by class for grain traders, millers, and commodity analysts. Historical depth back to 1866 enables long-run trend and climate impact studies."
+      }
+    },
+    "nass_crop_progress": {
+      "title": "Crop Progress & Condition (Weekly)",
+      "metadata": {
+        "source_url": "https://www.nass.usda.gov/Publications/National_Crop_Progress/",
+        "format": "JSON / CSV via Quick Stats API + weekly PDF",
+        "update_frequency": "weekly (April–November)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Weekly state-level percent of major crops at each growth stage (planted, emerged, blooming, headed, mature, harvested) and crop condition ratings (Very Poor / Poor / Fair / Good / Excellent) for corn, soybeans, wheat, cotton, sorghum, rice, barley, oats. Drives near-term yield expectations."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "S",
+        "expected_demand": 88,
+        "use_cases": "Inform near-term yield forecasts and futures price moves using weekly crop condition ratings and planting progress by state. Essential context for commodity traders and agricultural LLM grounding."
+      }
+    },
+    "sugar_crops": {
+      "title": "Sugar Crops — Sugarbeets & Sugarcane",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=SUGARBEETS&commodity_desc=SUGARCANE",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US sugar crop statistics: sugarbeet (Northern Plains, Pacific Northwest, Great Lakes) and sugarcane (Florida, Louisiana, Texas, Hawaii) acreage, production (tons), yield, sugar content and prices."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 55,
+        "use_cases": "Monitor US domestic sugar supply from both beet and cane sources for food industry cost analysis and trade policy context. Supports sugar price modeling alongside USDA ERS import quota data."
+      }
+    },
+    "farm_labor": {
+      "title": "Farm Labor — Workers Employed, Hours, Wage Rates",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=LABOR",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "semi-annual (Farm Labor report, May & Nov)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Semi-annual survey of hired farm labor: number of workers employed, hours worked, gross wage rates by worker type (field, livestock, supervisory) and 18 multi-state regions. Used to set the H-2A Adverse Effect Wage Rate."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 58,
+        "use_cases": "Track agricultural wage trends for policy research on H-2A visa programs and farm labor costs. Useful for agribusiness workforce cost modeling and immigration policy analysis."
+      }
+    },
+    "irrigation_water_use": {
+      "title": "Farm & Ranch Irrigation Survey",
+      "metadata": {
+        "source_url": "https://www.nass.usda.gov/Surveys/Guide_to_NASS_Surveys/Farm_and_Ranch_Irrigation/",
+        "format": "PDF + Quick Stats API",
+        "update_frequency": "every 5 years (Census of Agriculture follow-on)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Detailed irrigation data following each Census of Agriculture: irrigated acres by crop, water applied (acre-feet), water sources (surface vs. groundwater), distribution systems (gravity, sprinkler, drip), pumping energy and irrigation expenses by state."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 48,
+        "use_cases": "Quantify agricultural water consumption by state and crop for water rights research and climate adaptation planning. Supports groundwater depletion and irrigation efficiency studies in water-stressed regions."
+      }
+    },
+    "fruits_tree_nuts": {
+      "title": "Fruits & Tree Nuts — Production, Utilization, Prices",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&group_desc=FRUIT%20%26%20TREE%20NUTS",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual (Noncitrus & Citrus Fruits and Nuts Summary); monthly forecasts",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US fruit and tree nut statistics: bearing acres, production (tons or lbs), utilized production, fresh vs. processed split and grower prices for apples, grapes, oranges, almonds, pecans, walnuts, pistachios, cherries, peaches, blueberries, strawberries and dozens more."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "S",
+        "expected_demand": 70,
+        "use_cases": "Benchmark US almond, walnut, and citrus supply for agricultural commodity research and food retailer sourcing analysis. Supports price forecasting and crop year comparisons across dozens of specialty crops."
+      }
+    },
+    "sorghum": {
+      "title": "Sorghum — Acreage, Production, Yield, Price",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=SORGHUM",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly during growing season; quarterly stocks",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US grain sorghum statistics: planted/harvested acres, production (bushels), yield, prices and stocks. Includes silage sorghum and sorghum syrup."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 44,
+        "use_cases": "Track US grain sorghum supply for livestock feed and ethanol market analysis, particularly in drought-prone Southern Plains states. Supports feed grain substitution modeling relative to corn."
+      }
+    },
+    "honey_bee_colonies": {
+      "title": "Honey & Bee Colonies",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=HONEY",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual (Honey report, March); quarterly (Bee Colonies)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US honey production: number of colonies, yield per colony (lbs), total production, stocks and prices by state. Quarterly Honey Bee Colonies report tracks colony loss, additions, renovations and stressors (Varroa mites, disease, pesticides) for operations with 5+ colonies."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 55,
+        "use_cases": "Monitor US honeybee colony health trends and pollinator population changes for ecological research and agricultural risk assessment. Useful for quantifying colony collapse disorder and pesticide impact studies."
+      }
+    },
+    "chemical_use_arms": {
+      "title": "Agricultural Chemical Use & ARMS Survey",
+      "metadata": {
+        "source_url": "https://www.nass.usda.gov/Surveys/Guide_to_NASS_Surveys/Chemical_Use/",
+        "format": "JSON / CSV via Quick Stats API + ARMS public-use microdata",
+        "update_frequency": "by-commodity rotation (typically every 2–3 years per crop)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Agricultural Chemical Use Survey: pesticide and fertilizer application rates, active ingredients and treated acreage by crop and state. Paired with the Agricultural Resource Management Survey (ARMS), a joint NASS/ERS survey of farm production practices, costs and finances."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "S",
+        "expected_demand": 57,
+        "use_cases": "Quantify pesticide and fertilizer application rates by crop for environmental impact research and regulatory analysis. Supports precision agriculture studies and glyphosate/herbicide resistance trend monitoring."
+      }
+    },
+    "demographics_operators": {
+      "title": "Demographics — Producers & Operators (Census)",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&sector_desc=DEMOGRAPHICS",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "5-year (Census of Agriculture)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Producer and operator demographics from the Census of Agriculture: age, gender, race, ethnicity, primary occupation, years on operation and military service. Available at national, state and county level for census years."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 50,
+        "use_cases": "Analyze shifts in US farm operator age, gender, and racial composition across census years for rural sociology and policy research. Supports USDA equity program targeting and beginning farmer trend analysis."
+      }
+    },
+    "agricultural_prices": {
+      "title": "Agricultural Prices — Prices Received & Prices Paid",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&group_desc=PRICES",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly (Agricultural Prices)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Monthly index and unit prices received by US farmers for crops and livestock, plus prices paid for production inputs (fertilizer, fuel, seed, feed, chemicals, machinery, labor, interest, taxes). The basis for parity calculations."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "S",
+        "expected_demand": 83,
+        "use_cases": "Track farm-level price margins by computing prices received minus prices paid for inputs — the core measure of farm profitability. Essential for agricultural economics research and USDA parity ratio calculations."
+      }
+    },
+    "cotton": {
+      "title": "Cotton — Acreage, Production, Yield, Price (Upland & Pima)",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=COTTON",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly during growing season",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US cotton statistics by type (Upland and American Pima/ELS): planted and harvested acres, production (480-lb bales), yield per harvested acre and farm-gate prices. National, state and county series."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "S",
+        "expected_demand": 78,
+        "use_cases": "Monitor US cotton supply fundamentals for textile industry sourcing and commodity trading. Upland vs. Pima split supports premium fiber market analysis and USDA export competitiveness assessments."
+      }
+    },
+    "barley_oats": {
+      "title": "Barley & Oats — Acreage, Production, Yield, Stocks",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=BARLEY&commodity_desc=OATS",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual (Small Grains Summary); quarterly stocks",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US barley and oats statistics: acreage, production, yield, prices and ending stocks. Both crops are covered in the annual Small Grains Summary."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 46,
+        "use_cases": "Track US barley supply for malting and brewing industry procurement and oats for feed grain and food use analysis. Supports minor feed grain market research alongside corn and sorghum."
+      }
+    },
+    "cattle": {
+      "title": "Cattle — Inventory, Slaughter, Production, Prices",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=CATTLE",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "semi-annual inventory (Jan/Jul); monthly slaughter; weekly prices",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US cattle statistics: full beef and dairy herd inventory by class (cows, heifers, steers, bulls, calves), Cattle on Feed (monthly), slaughter counts and weights, beef production and farm-gate prices. The flagship NASS livestock report."
+      },
+      "status": "active",
+      "reason": null,
+      "node": "src/nodes/quickstats.py",
+      "curation": {
+        "expected_size": null,
+        "expected_demand": 93,
+        "use_cases": "Track US beef herd cycles and slaughter volumes for protein market research and cattle futures analysis. Herd inventory series enables multi-year cattle cycle modeling critical to beef price forecasting."
+      }
+    },
+    "land_values_cash_rents": {
+      "title": "Land Values & Cash Rents",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=AG%20LAND",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual (Land Values report, August)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Annual estimates of farm real estate value, cropland value, pasture value and cash rental rates ($/acre) for cropland (irrigated, non-irrigated) and pasture, by state and agricultural district."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 72,
+        "use_cases": "Benchmark US farmland values and cash rent rates by state for agricultural real estate investment research. Supports farm income analysis and the study of land price appreciation relative to commodity cycles."
+      }
+    },
+    "hogs": {
+      "title": "Hogs & Pigs — Inventory, Slaughter, Production, Prices",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=HOGS",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "quarterly inventory; monthly slaughter; weekly prices",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US hogs and pigs inventory by class (breeding, market hogs by weight group), pig crop, farrowing intentions, monthly slaughter and pork production, plus farm-gate prices. Released in the quarterly Hogs and Pigs report."
+      },
+      "status": "active",
+      "reason": null,
+      "node": "src/nodes/quickstats.py",
+      "curation": {
+        "expected_size": null,
+        "expected_demand": 86,
+        "use_cases": "Monitor US hog inventory and pork production cycles for commodity trading and protein market analysis. Farrowing intentions data provides a 3–6 month leading indicator for future pork supply."
+      }
+    },
+    "soybeans": {
+      "title": "Soybeans — Acreage, Production, Yield, Price, Stocks",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=SOYBEANS",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly (Crop Production); quarterly (Stocks)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US soybean statistics: planted/harvested acres, production (bushels), yield, farm-gate prices and quarterly Grain Stocks. National, state and county coverage from 1924 onward."
+      },
+      "status": "active",
+      "reason": null,
+      "node": "src/nodes/quickstats.py",
+      "curation": {
+        "expected_size": null,
+        "expected_demand": 95,
+        "use_cases": "Benchmark US soybean supply fundamentals for oilseed and protein meal markets, with historical coverage from 1924. Essential for corn-soybean rotation analysis and USDA WASDE cross-referencing."
+      }
+    },
+    "corn": {
+      "title": "Corn — Acreage, Production, Yield, Price, Stocks",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=CORN",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly (WASDE, Crop Production); annual (Acreage, Grain Stocks)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Complete US corn statistics: planted and harvested acreage, production (bushels), yield per acre, farm-gate prices, ending stocks and disappearance. National, state and county-level series back to 1866 for the headline indicators. The single most queried commodity in NASS."
+      },
+      "status": "active",
+      "reason": null,
+      "node": "src/nodes/quickstats.py",
+      "curation": {
+        "expected_size": null,
+        "expected_demand": 97,
+        "use_cases": "Access the definitive US corn supply record — acreage, yield, stocks, and prices back to 1866 — for commodity research, ethanol market analysis, and livestock feed cost modeling. The highest-demand agricultural dataset in NASS."
+      }
+    },
+    "milk_dairy": {
+      "title": "Milk & Dairy Products — Production, Cows, Prices",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=MILK",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "monthly (Milk Production); annual (Dairy Products Summary)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US milk production statistics: monthly milk output (lbs) by state, milk cow inventory, milk per cow, cull rates, all-milk and Class III/IV prices. Includes manufactured dairy products (cheese, butter, nonfat dry milk, ice cream) production and stocks."
+      },
+      "status": "active",
+      "reason": null,
+      "node": "src/nodes/quickstats.py",
+      "curation": {
+        "expected_size": null,
+        "expected_demand": 85,
+        "use_cases": "Track US milk production volumes and Class III/IV prices for dairy commodity trading and food manufacturer cost analysis. Monthly state-level data supports herd productivity trend studies and cheese/butter futures research."
+      }
+    },
+    "horticulture": {
+      "title": "Horticulture — Floriculture, Nursery, Mushrooms",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&group_desc=HORTICULTURE",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual (Floriculture Crops, Mushrooms); 5-yr (Census of Horticulture)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US horticulture statistics: floriculture crop sales by species (cut flowers, potted plants, bedding plants), nursery and greenhouse operations, mushroom production (sales, lbs, growers) and Christmas trees. Anchored by the 5-yearly Census of Horticulture follow-on."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 38,
+        "use_cases": "Quantify US specialty horticulture industry size — floriculture sales, nursery output, and mushroom production — for niche agricultural market research. Useful for greenhouse industry trend analysis and specialty crop investment."
+      }
+    },
+    "vegetables": {
+      "title": "Vegetables — Acreage, Production, Utilization, Prices",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&group_desc=VEGETABLES",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual (Vegetables Summary); seasonal in-season",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US fresh-market and processing vegetable statistics: planted/harvested acres, production (cwt), yield, fresh vs. processed utilization and grower prices. Covers potatoes, tomatoes, onions, lettuce, sweet corn, snap beans, broccoli, carrots and many more."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "S",
+        "expected_demand": 67,
+        "use_cases": "Benchmark US vegetable supply by crop and utilization channel (fresh vs. processed) for food industry sourcing and produce price research. Supports retail category analysis and grower price trend studies for major vegetables."
+      }
+    },
+    "cropland_data_layer": {
+      "title": "Cropland Data Layer (CDL) — Crop-Specific Land Cover Raster",
+      "metadata": {
+        "source_url": "https://www.nass.usda.gov/Research_and_Science/Cropland/SARS1a.php",
+        "format": "GeoTIFF raster (10-meter from 2024; 30-meter historical)",
+        "update_frequency": "annual (released February following season)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Annual crop-specific land cover raster for the conterminous US (and Hawaii separately). Derived from satellite imagery and ground-truth data, labeling every pixel as a specific crop (corn, soybeans, wheat, ...) or land cover class. Resolution increased from 30m to 10m starting 2024."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XL",
+        "expected_demand": 71,
+        "use_cases": "Map crop-specific land cover at pixel level for precision agriculture, remote sensing research, and land-use change analysis. Widely used to derive planted acreage estimates and validate NASS survey figures."
+      }
+    },
+    "sheep_goats": {
+      "title": "Sheep, Lambs & Goats — Inventory, Production, Prices",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=SHEEP&commodity_desc=GOATS&commodity_desc=WOOL",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual inventory (Jan); annual wool/mohair production",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US sheep, lamb and goat inventory by class, lamb crop, wool and mohair production (lbs), shorn sheep counts and farm-gate prices."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 35,
+        "use_cases": "Track US small ruminant inventory and wool/mohair output for specialty fiber and meat market research. Relevant for niche ethnic food market analysis and natural fiber supply chain studies."
+      }
+    },
+    "census_of_agriculture": {
+      "title": "Census of Agriculture",
+      "metadata": {
+        "source_url": "https://www.nass.usda.gov/AgCensus/",
+        "format": "Quick Stats API + downloadable PDF/XLSX volumes",
+        "update_frequency": "every 5 years (next: 2027)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Complete count of every US farm and ranch with $1,000+ in actual or potential annual sales. Covers land use, ownership, operator demographics, production practices, income and expenses for every county in the nation. Most recent: 2022 Census, released February 2024."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "M",
+        "expected_demand": 79,
+        "use_cases": "Access comprehensive county-level farm structure data — land use, sales, income, and operator demographics — for rural economic research and agricultural policy analysis. The authoritative baseline for all USDA program targeting and farm sector benchmarking."
+      }
+    },
+    "hay": {
+      "title": "Hay — Acreage, Production, Yield, Price (Alfalfa & Other)",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=HAY",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual (Crop Production Annual Summary)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "US hay statistics split between Alfalfa and Other Hay: harvested acres, production (tons), yield per acre and prices. Critical input for livestock feed cost analysis."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 60,
+        "use_cases": "Monitor US alfalfa and hay production volumes and prices as a key input cost for cattle and dairy operations. Supports drought impact analysis on livestock feed availability and farm profitability."
+      }
+    },
+    "farms_land_in_farms": {
+      "title": "Farms, Land in Farms & Livestock Operations",
+      "metadata": {
+        "source_url": "https://quickstats.nass.usda.gov/results?source_desc=SURVEY&commodity_desc=FARM%20OPERATIONS",
+        "format": "JSON / CSV via Quick Stats API",
+        "update_frequency": "annual (Farms and Land in Farms, February)",
+        "license": "Public domain (US Government work, 17 U.S.C. §105)",
+        "description": "Annual count of US farms, total land in farms (acres) and average farm size, broken down by economic sales class. Includes livestock operation counts by species."
+      },
+      "status": "disabled",
+      "reason": "awaiting curation",
+      "node": null,
+      "curation": {
+        "expected_size": "XS",
+        "expected_demand": 62,
+        "use_cases": "Track long-run trends in US farm count, average farm size, and land consolidation for agricultural structure research. Supports rural economics analysis and debates around industrialization vs. small farm viability."
+      }
+    }
+  }
+}
